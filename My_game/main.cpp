@@ -9,11 +9,13 @@ int main()
     //Initialize a window
     RenderWindow window (VideoMode(640,480),"First_lesson");
 
-    // Creating rectangle
-    RectangleShape rectangle(Vector2f(128.0f,128.0f));
-    rectangle.setFillColor(Color::Red);
-    rectangle.setPosition(320,240);
-    rectangle.setOrigin(rectangle.getSize().x / 2,rectangle.getSize().y);
+    // Creating playerSprite
+    Texture playerTexture;
+    playerTexture.loadFromFile("Media/Images/Mushroom.png");
+    Vector2u size = playerTexture.getSize();
+    Sprite player (playerTexture);
+    player.setOrigin(size.x / 2,size.y / 2);
+    player.setPosition(320,240);
 
     // Game loop
     while (window.isOpen()) {
@@ -26,7 +28,7 @@ int main()
 
         window.clear(Color::Black);
         // Draw here
-        window.draw(rectangle);
+        window.draw(player);
         window.display();
 
     }
