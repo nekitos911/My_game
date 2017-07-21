@@ -1,9 +1,9 @@
 #include "game.h"
 
-Game::Game() : m_window("New",Vector2u(800,600))
+Game::Game() : m_window("New",Vector2u(800,600)),m_snake(m_world.GetBlockSize()),m_world(Vector2u(800,600))
 {
     RestartClock();
-    srand(time(NULL));
+    srand(time(nullptr));
 
     m_playerTexture.loadFromFile("Media/Images/Mushroom.png");
     m_player.setTexture(m_playerTexture);
@@ -12,40 +12,40 @@ Game::Game() : m_window("New",Vector2u(800,600))
 }
 Game::~Game() {}
 
-Time Game::GetElapsed() { return m_elapsed; }
-void Game::RestartClock() { m_elapsed = m_clock.restart(); }
+Time Game::GetElapsed() { return m_clock.getElapsedTime(); }
+void Game::RestartClock() { m_elapsed += m_clock.restart().asSeconds(); }
 MyWindow *Game::GetWindow() { return &m_window; }
 
-void Game::HandleInput() {}
+void Game::HandleInput() {
+    if (Keyboard::isKeyPressed(Keyboard::Up) && m_snake.GetPhysicalDirection() != Direction::Down)
+        m_snake.SetDirection(Direction::Up);
+    else if (Keyboard::isKeyPressed(Keyboard::Down) && m_snake.GetPhysicalDirection() != Direction::Up)
+        m_snake.SetDirection(Direction::Down);
+    else if (Keyboard::isKeyPressed(Keyboard::Left) && m_snake.GetPhysicalDirection() != Direction::Right)
+        m_snake.SetDirection(Direction::Left);
+    else if (Keyboard::isKeyPressed(Keyboard::Right) && m_snake.GetPhysicalDirection() != Direction::Left)
+        m_snake.SetDirection(Direction::Right);
+}
 
 void Game::Update() {
     m_window.Update(); // update window
-    MovePlayer();
+    //MovePlayer();
+
+    float timestep = 1.0f / m_snake.GetSpeed();
+
+    if (m_elapsed >= timestep) {
+        m_snake.Tick();
+        m_world.Update(m_snake);
+        m_elapsed -= timestep;
+        if (m_snake.HasLost())
+            m_snake.Reset();
+    }
 }
-
-void Game::MovePlayer() {
-
-    float elapsed = m_elapsed.asSeconds();
-
-    Vector2u l_windowSize = m_window.GetWindowSize();
-    Vector2u l_textureSize = m_playerTexture.getSize();
-
-    if ((m_player.getPosition().x > l_windowSize.x - l_textureSize.x && m_increment.x > 0) ||
-           ( m_player.getPosition().x < 0 && m_increment.x < 0))
-        m_increment.x = -m_increment.x;
-
-    if ((m_player.getPosition().y > l_windowSize.y - l_textureSize.y && m_increment.y > 0) ||
-           ( m_player.getPosition().y < 0 && m_increment.y < 0))
-        m_increment.y = -m_increment.y;
-
-    m_player.setPosition(m_player.getPosition().x + m_increment.x * elapsed,
-                         m_player.getPosition().y + m_increment.y * elapsed);
-}
-
 
 void Game::Render() {
     m_window.BeginDraw(); // Clear
-    m_window.Draw(m_player);
+    m_world.Render(*m_window.GetRenderWindow());
+    m_snake.Render(*m_window.GetRenderWindow());
     m_window.EndDraw(); // Display
 }
 

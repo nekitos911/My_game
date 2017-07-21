@@ -20,6 +20,7 @@ public:
     bool IsDone();
     bool IsFullScreen();
     Vector2u GetWindowSize();
+    RenderWindow* GetRenderWindow();
 
     void ToggleFullScreen();
 

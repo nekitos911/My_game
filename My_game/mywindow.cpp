@@ -9,6 +9,8 @@ MyWindow::MyWindow (const std::string &l_title, const Vector2u &l_size) {
 }
 MyWindow::~MyWindow() { Destroy(); }
 
+RenderWindow* MyWindow::GetRenderWindow(){ return &m_window; }
+
 void MyWindow::Setup(const std::string &l_title, const Vector2u &l_size) {
     m_windowTitle = l_title;
     m_windowSize = l_size;

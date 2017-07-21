@@ -2,6 +2,8 @@
 #define GAME_H
 
 #include "mywindow.h"
+#include "world.h"
+#include "snake.h"
 
 using namespace sf;
 
@@ -26,9 +28,10 @@ private:
     Vector2i m_increment;
 
     Clock m_clock;
-    Time m_elapsed;
+    float m_elapsed;
 
-    void MovePlayer();
+    World m_world;
+    Snake m_snake;
 };
 
 #endif // GAME_H

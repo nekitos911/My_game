@@ -11,11 +11,15 @@ CONFIG(debug, debug|release): LIBS += -lsfml-audio-d -lsfml-graphics-d -lsfml-ma
 
 SOURCES += main.cpp \
     mywindow.cpp \
-    game.cpp
+    game.cpp \
+    snake.cpp \
+    world.cpp
 
 INCLUDEPATH += D:/SFML1/include
 DEPENDPATH += D:/SFML1/include
 
 HEADERS += \
     mywindow.h \
-    game.h
+    game.h \
+    snake.h \
+    world.h
